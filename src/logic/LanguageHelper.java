@@ -60,21 +60,21 @@ public class LanguageHelper {
      * @return null if not saved.
      */
     @Nullable
-    public static List<String> getSelectedLanguageCodes(@NotNull Project project) {
+    public static String getSelectedLanguageCodes(@NotNull Project project) {
         Objects.requireNonNull(project);
+        return PropertiesComponent.getInstance(project).getValue(Constants.KEY_SELECTED_LANGUAGES);
+    }
 
-        String codeString = PropertiesComponent.getInstance(project)
-                .getValue(Constants.KEY_SELECTED_LANGUAGES);
-
-        if (TextUtils.isEmpty(codeString)) {
+    @Nullable
+    public static List<String> parseSelectedLanguageCodes(@Nullable String project_str) {
+        if (TextUtils.isEmpty(project_str)) {
             return null;
         }
-
-        return Arrays.asList(codeString.split(","));
+        return Arrays.asList(project_str.split(","));
     }
 
     @NotNull
-    private static String getLanguageCodeString(@NotNull List<LANG> language) {
+    public static String getLanguageCodeString(@NotNull List<LANG> language) {
         StringBuilder codes = new StringBuilder(language.size());
         for (int i = 0, len = language.size(); i < len; i++) {
             LANG lang = language.get(i);

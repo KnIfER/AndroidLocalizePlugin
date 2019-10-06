@@ -1,8 +1,8 @@
 <idea-plugin>
-    <id>com.github.airsaid.androidlocalize</id>
-    <name>AndroidLocalize</name>
-    <version>1.3</version>
-    <vendor email="airsaid1024@gmail.com" url="https://github.com/Airsaid/AndroidLocalizePlugin">Airsaid</vendor>
+    <id>com.knziha.superlocalization</id>
+    <name>SuperLocalization</name>
+    <version>1.7</version>
+    <vendor email="airsaid1024@gmail.com (original)" url="https://github.com/Airsaid/AndroidLocalizePlugin (original)">Airsaid</vendor>
 
     <description><![CDATA[
       Android localization plugin. Support multiple languages, No need to apply for key.<br>
@@ -32,8 +32,8 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="AndroidLocalizePlugin.ConvertAction" class="action.ConvertAction"
-                text="Convert to other languages"
+        <action id="SuperLocalizationPlugin.ConvertAction" class="action.ConvertAction"
+                text="Super convert to other languages"
                 icon="PluginIcons.CONVERT_ACTION_ICON"
                 description="Convert this strings.xml to other languages that can be used to localize your Android app.">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="EditSource"/>

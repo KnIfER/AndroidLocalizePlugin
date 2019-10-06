@@ -35,7 +35,9 @@ import org.jetbrains.annotations.Nullable;
 import translate.lang.LANG;
 import translate.querier.Querier;
 import translate.trans.AbstractTranslator;
+import translate.trans.impl.BaiduTranslator;
 import translate.trans.impl.GoogleTranslator;
+import translate.util.Util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -78,7 +80,16 @@ public class TranslateTask extends Task.Backgroundable {
         mWriteData.clear();
 
         for (LANG toLanguage : mLanguages) {
-            progressIndicator.setText("Translating in the " + toLanguage.getEnglishName() + " language...");
+            String feihua=null;
+            if(Util.stopped){
+                feihua = "悬崖勒马亡羊补牢望洋兴叹...";
+            }
+            if(feihua==null)
+                progressIndicator.setText("Translating in the " + toLanguage.getEnglishName() + " language...");
+            else{
+                progressIndicator.setText(feihua + toLanguage.getEnglishName() + " language");
+                //拉风点。 be cool. 反正 AS 本身就很慢，索引就很慢；你快了，反而违和。
+            }
 
             if (isOverwriteExistingString) {
                 translate(translator, toLanguage, null);
@@ -104,7 +115,8 @@ public class TranslateTask extends Task.Backgroundable {
             });
         }
         googleTranslator.close();
-        writeResultData(progressIndicator);
+        if(!Util.noWrite)
+            writeResultData(progressIndicator);
     }
 
     private void translate(Querier<AbstractTranslator> translator, LANG toLanguage, @Nullable List<AndroidString> list) {

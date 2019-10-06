@@ -1,6 +1,8 @@
 package translate.util;
 
+import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.*;
@@ -13,6 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Util {
+    public static String hostName;
+    public static int hostPort;
+    public static boolean stopped;
+    public static boolean noWrite;
+    public static CloseableHttpClient httpClient;
+
     public static List<NameValuePair> map2list(Map<String, String> mapParams) {
         List<NameValuePair> listParams = new ArrayList<NameValuePair>();
         Iterator it = mapParams.entrySet().iterator();
@@ -131,5 +139,18 @@ public class Util {
             resultCharArray[index++] = hexDigits[b & 0xf];
         }
         return new String(resultCharArray);
+    }
+
+    public static void Stop() {
+        stopped=true;
+        try {
+            Util.httpClient.close();
+            Util.httpClient=null;
+        } catch (Exception ignored) { }
+    }
+
+    public static void StopNoWrite() {
+        noWrite=true;
+        Stop();
     }
 }

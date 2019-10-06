@@ -2,6 +2,8 @@ package translate.trans.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -9,6 +11,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.util.EntityUtils;
 import translate.lang.LANG;
 import translate.trans.AbstractTranslator;
+import translate.util.Util;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -161,12 +164,19 @@ public final class GoogleTranslator extends AbstractTranslator {
 
     @Override
     public String query() throws Exception {
+        if(Util.stopped)
+            return "";
         URIBuilder uri = new URIBuilder(url);
         for (String key : formData.keySet()) {
             String value = formData.get(key);
             uri.addParameter(key, value);
         }
-        HttpUriRequest request = new HttpGet(uri.toString());
+        HttpGet request = new HttpGet(uri.toString());//HttpUriRequest
+        RequestConfig.Builder builder = RequestConfig.copy(RequestConfig.DEFAULT);
+        if(Util.hostName!=null)
+            builder.setProxy(new HttpHost(Util.hostName, Util.hostPort));
+        request.setConfig(builder.build());
+        Util.httpClient = httpClient;
         CloseableHttpResponse response = httpClient.execute(request);
         HttpEntity entity = response.getEntity();
 
@@ -176,6 +186,7 @@ public final class GoogleTranslator extends AbstractTranslator {
         response.getEntity().getContent().close();
         response.close();
 
+        Util.httpClient = null;
         return result;
     }
 
